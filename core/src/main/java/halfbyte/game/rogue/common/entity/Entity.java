@@ -1,6 +1,12 @@
 package halfbyte.game.rogue.common.entity;
 
+import com.badlogic.gdx.math.GridPoint2;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import halfbyte.game.rogue.common.Util;
+import halfbyte.game.rogue.common.ability.Ability;
 
 public class Entity {
     public enum EType{
@@ -17,6 +23,9 @@ public class Entity {
     private int m_tile_y;
     private int m_initiative;
     private int m_speed;
+    private int m_hp_current;
+    private int m_hp_max;
+    private List<Ability> m_abilities;
 
     // methods
     public Entity(){
@@ -34,6 +43,13 @@ public class Entity {
         this.m_tile_y = tile_y;
         this.m_initiative = 0;
         this.m_speed = 1;
+        this.m_hp_max = Util.getRandomIntInRange(20, 30);
+        this.m_hp_current = Util.getRandomIntInRange(10, this.m_hp_max);
+        this.m_abilities = new ArrayList<>();
+    }
+
+    public long getId(){
+        return this.m_id;
     }
 
     public EType getType(){
@@ -61,6 +77,12 @@ public class Entity {
         this.m_tile_y = tile_y;
     }
 
+    public void moveDirection(Util.EDirection direction){
+        GridPoint2 gp = direction.toGridPoint2();
+        this.m_tile_x += gp.x;
+        this.m_tile_y += gp.y;
+    }
+
     public int getInitiative(){
         return this.m_initiative;
     }
@@ -71,5 +93,35 @@ public class Entity {
 
     public void increaseInitiative(){
         this.m_initiative += this.m_speed;
+    }
+
+    public List<Ability> getAbilities(){
+        return this.m_abilities;
+    }
+
+    public int getHpCurrent(){
+        return this.m_hp_current;
+    }
+
+    public int getHpMax(){
+        return this.m_hp_max;
+    }
+
+    public void damage(int amount){
+        this.m_hp_current -= amount;
+        if (this.m_hp_current < 0){
+            this.m_hp_current = 0;
+        }
+    }
+
+    public void heal(int amount){
+        this.m_hp_current += amount;
+        if (this.m_hp_current > this.m_hp_max){
+            this.m_hp_current = this.m_hp_max;
+        }
+    }
+
+    public boolean getIsAlive(){
+        return this.m_hp_current > 0;
     }
 }

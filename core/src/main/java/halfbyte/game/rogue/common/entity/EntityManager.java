@@ -29,9 +29,11 @@ public class EntityManager {
             // find turn with most initiative >= 1000
             Entity turn = null;
             for (Entity entity : this.m_entities) {
-                if (entity.getInitiative() >= 1000) {
-                    if (turn == null || entity.getInitiative() > turn.getInitiative()) {
-                        turn = entity;
+                if (entity.getIsAlive()) {
+                    if (entity.getInitiative() >= 1000) {
+                        if (turn == null || entity.getInitiative() > turn.getInitiative()) {
+                            turn = entity;
+                        }
                     }
                 }
             }
@@ -43,8 +45,19 @@ public class EntityManager {
 
             // didnt find one so increase all initiative
             for (Entity entity : this.m_entities){
-                entity.increaseInitiative();
+                if (entity.getIsAlive()) {
+                    entity.increaseInitiative();
+                }
             }
         }
+    }
+
+    public Entity getEntityById(long id){
+        for (Entity entity : this.m_entities){
+            if (entity.getId() == id){
+                return entity;
+            }
+        }
+        return null;
     }
 }

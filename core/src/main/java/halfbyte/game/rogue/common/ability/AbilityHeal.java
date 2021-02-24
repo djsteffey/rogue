@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import halfbyte.game.rogue.common.Util;
 import halfbyte.game.rogue.common.battleaction.BattleAction;
-import halfbyte.game.rogue.common.battleaction.BattleActionEntityMeleeAttack;
+import halfbyte.game.rogue.common.battleaction.BattleActionEntityHeal;
 import halfbyte.game.rogue.common.entity.Entity;
 
-public class AbilityMeleeAttack extends Ability {
-    public AbilityMeleeAttack() {
-        super("Attack", 0, 1, true);
+public class AbilityHeal extends Ability {
+    public AbilityHeal() {
+        super("Heal", 4, 5, true);
     }
 
     @Override
     public List<BattleAction> execute(Entity owner, Entity target_entity, Object parameter) {
-        // calculate the damage
-        int damage = Util.getRandomIntInRange(1, 5);
+        // calculate the heal
+        int heal = Util.getRandomIntInRange(1, 5);
 
-        // apply the damage
-        target_entity.damage(damage);
+        // apply the heal
+        target_entity.heal(heal);
 
         // on cooldown
         this.resetCooldown();
 
         // build the action
         List<BattleAction> actions = new ArrayList<>();
-        actions.add(new BattleActionEntityMeleeAttack(owner.getId(), target_entity.getId(), damage));
+        actions.add(new BattleActionEntityHeal(owner.getId(), target_entity.getId(), heal));
         return actions;
     }
 
@@ -36,10 +36,12 @@ public class AbilityMeleeAttack extends Ability {
             return false;
         }
 
-        // no if ourself
-        if (other == owner) {
+        // no it not ourself
+        /*
+        if (other != owner) {
             return false;
         }
+         */
 
         // good to go
         return true;
